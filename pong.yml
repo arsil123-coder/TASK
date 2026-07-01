@@ -1,6 +1,6 @@
 ---
 - name: Test connectivity
-  hosts: linux
+  hosts: all
   gather_facts: no
 
   tasks:
