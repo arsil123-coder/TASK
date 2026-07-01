@@ -1,9 +1,48 @@
 ---
-- name: Test connectivity
+- name: Ubuntu basic checks
   hosts: all
   gather_facts: no
 
   tasks:
+
     - name: Ping all hosts
       ansible.builtin.ping:
 
+    - name: Check uptime
+      command: uptime
+      register: uptime_output
+
+    - name: Show uptime
+      debug:
+        var: uptime_output.stdout
+
+    - name: Check disk usage
+      command: df -h
+      register: disk_output
+
+    - name: Show disk usage
+      debug:
+        var: disk_output.stdout
+
+    - name: Check memory usage
+      command: free -m
+      register: mem_output
+
+    - name: Show memory usage
+      debug:
+        var: mem_output.stdout
+
+    - name: Check if nginx is installed
+      command: dpkg -l | grep nginx
+      register: nginx_check
+      ignore_errors: yes
+
+    - name: Show nginx status
+      debug:
+        var: nginx_check.stdout
+
+    - name: Ensure nginx service is running
+      service:
+        name: nginx
+        state: started
+      become: yes
